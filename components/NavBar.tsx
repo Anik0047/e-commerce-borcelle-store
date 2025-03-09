@@ -16,6 +16,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Input } from "@/components/ui/input";
 import Link from "next/link";
 import { UserButton, useUser } from "@clerk/nextjs";
+import useCart from "@/lib/hooks/useCart";
 
 export function NavBar() {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -23,6 +24,8 @@ export function NavBar() {
   const [showSearchInput, setShowSearchInput] = useState(false);
 
   const { user } = useUser();
+
+  const cart = useCart();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -148,7 +151,7 @@ export function NavBar() {
             >
               <ShoppingCart className="h-5 w-5" />
               <span className="absolute -top-1 -right-1 w-4 h-4 bg-primary text-primary-foreground text-xs rounded-full flex items-center justify-center">
-                0
+                {cart.cartItems.length}
               </span>
             </Button>
           </Link>

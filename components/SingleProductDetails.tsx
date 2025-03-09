@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import { Button } from "./ui/button";
 import { toast } from "sonner";
 import { useUser } from "@clerk/nextjs";
+import useCart from "@/lib/hooks/useCart";
 
 // Define the type for User
 type UserType = {
@@ -39,6 +40,8 @@ const SingleProductDetails = ({
 
   const { user } = useUser();
 
+  const cart = useCart();
+
   const getUser = async () => {
     try {
       setIsLoading(true);
@@ -70,11 +73,6 @@ const SingleProductDetails = ({
     setQuantity(quantity + 1);
   };
 
-  const addToCart = () => {
-    toast.success(`${productDetails?.title} added to cart`, {
-      description: `${quantity} × $${productDetails?.price.toFixed(2)}`,
-    });
-  };
 
   const addToWishlist = async () => {
     try {
@@ -257,10 +255,32 @@ const SingleProductDetails = ({
 
               {/* Actions */}
               <div className="flex flex-col sm:flex-row gap-3 pt-4">
-                <Button size="lg" className="flex-1" onClick={addToCart}>
+                <Button
+                  size="lg"
+                  className="flex-1"
+                  onClick={() => {
+                    if (!selectedColor) {
+                      toast.error("Please select a color before adding to cart!");
+                      return;
+                    }
+                    if (productDetails.sizes.length > 0 && !selectedSize) {
+                      toast.error("Please select a size before adding to cart!");
+                      return;
+                    }
+
+                    cart.addItem({
+                      item: productDetails,
+                      quantity,
+                      color: selectedColor,
+                      size: selectedSize || "", // If size is not required, pass an empty string
+                    });
+                  }}
+                >
                   <ShoppingCart className="mr-2 h-5 w-5" />
                   Add to Cart
                 </Button>
+
+
                 <Button variant="outline" size="lg" onClick={addToWishlist}>
                   <Heart className="mr-2 h-5 w-5" fill={`${isLiked ? "black" : "white"}`} />
                   Wishlist

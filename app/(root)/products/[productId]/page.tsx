@@ -1,6 +1,6 @@
 
 import SingleProductDetails from "@/components/SingleProductDetails";
-import { getProductDetails } from "@/lib/action";
+import { getProductDetails } from "@/lib/actions/action";
 import { ChevronRight, Heart, Share2, ShoppingCart } from "lucide-react";
 
 
